@@ -9,3 +9,125 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Company {
+  id             Int            @id @default(autoincrement())
+  name           String
+  address        String?
+  locations      Location[]
+  menuCategories MenuCategory[]
+}
+
+model Location {
+  id                             Int                            @id @default(autoincrement())
+  name                           String
+  address                        String
+  company                        Company                        @relation(fields: [companyId], references: [id])
+  companyId                      Int
+  disabledLocationMenuCategories DisabledLocationMenuCategory[]
+  disabledLocationMenus          DisabledLocationMenu[]
+  tables                         Table[]
+}
+
+model MenuCategory {
+  id                             Int                            @id @default(autoincrement())
+  name                           String
+  company                        Company                        @relation(fields: [companyId], references: [id])
+  companyId                      Int
+  disabledLocationMenuCategories DisabledLocationMenuCategory[]
+  menuCategoryMenus              MenuCategoryMenu[]
+}
+
+model DisabledLocationMenuCategory {
+  id             Int          @id @default(autoincrement())
+  location       Location     @relation(fields: [locationId], references: [id])
+  locationId     Int
+  menuCategory   MenuCategory @relation(fields: [menuCategoryId], references: [id])
+  menuCategoryId Int
+}
+
+model Menu {
+  id                    Int                    @id @default(autoincrement())
+  name                  String
+  price                 Int                    @default(0)
+  description           String?
+  assetUrl              String?
+  disabledLocationMenus DisabledLocationMenu[]
+  menuCategoryMenus     MenuCategoryMenu[]
+  menuAddonCategories   MenuAddonCategory[]
+  orderlines            Orderline[]
+}
+
+model DisabledLocationMenu {
+  id         Int      @id @default(autoincrement())
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
+  menu       Menu     @relation(fields: [menuId], references: [id])
+  menuId     Int
+}
+
+model MenuCategoryMenu {
+  id             Int          @id @default(autoincrement())
+  menuCategory   MenuCategory @relation(fields: [menuCategoryId], references: [id])
+  menuCategoryId Int
+  menu           Menu         @relation(fields: [menuId], references: [id])
+  menuId         Int
+}
+
+model AddonCategory {
+  id                  Int                 @id @default(autoincrement())
+  name                String
+  isRequired          Boolean             @default(false)
+  menuAddonCategories MenuAddonCategory[]
+  addons              Addon[]
+}
+
+model MenuAddonCategory {
+  id              Int           @id @default(autoincrement())
+  menu            Menu          @relation(fields: [menuId], references: [id])
+  menuId          Int
+  addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  addonCategoryId Int
+}
+
+model Addon {
+  id              Int           @id @default(autoincrement())
+  name            String
+  price           Int           @default(0)
+  addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  addonCategoryId Int
+  orderlines      Orderline[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  totalPrice Int
+  orderlines Orderline[]
+  status     OrderStatus
+}
+
+model Orderline {
+  id            Int    @id @default(autoincrement())
+  order         Order  @relation(fields: [orderId], references: [id])
+  orderId       Int
+  menu          Menu   @relation(fields: [menuId], references: [id])
+  menuId        Int
+  addon         Addon  @relation(fields: [addonId], references: [id])
+  addonId       Int
+  quantity      Int
+  orderSequence String
+}
+
+model Table {
+  id         Int      @id @default(autoincrement())
+  name       String
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
+}
+
+enum OrderStatus {
+  ORDERED
+  OUTFORDELIVERY
+  DELIVERED
+  CANCELLED
+}
