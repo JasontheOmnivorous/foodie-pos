@@ -12,40 +12,49 @@ import { Box, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 interface SideBar {
+  id: number;
   name: string;
   icon: ReactNode;
 }
 
 const sidebarData: SideBar[] = [
   {
+    id: 1,
     name: "Orders",
     icon: <LocalMallIcon sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 2,
     name: "MenuCategories",
     icon: <Category sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 3,
     name: "Menus",
     icon: <RestaurantMenu sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 4,
     name: "Addon Categories",
     icon: <ChromeReaderModeSharp sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 5,
     name: "Addons",
     icon: <AddReactionSharp sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 6,
     name: "Tables",
     icon: <TableBarSharp sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 7,
     name: "Locations",
     icon: <LocationOnSharp sx={{ fontSize: 50, m: 2 }} />,
   },
   {
+    id: 8,
     name: "Settings",
     icon: <Settings sx={{ fontSize: 50, m: 2 }} />,
   },
@@ -68,6 +77,7 @@ const Sidebar = () => {
       {sidebarData.map((item) =>
         item.name === "Settings" ? (
           <Box
+            key={item.id}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -83,6 +93,7 @@ const Sidebar = () => {
           </Box>
         ) : (
           <Box
+            key={item.id}
             sx={{
               display: "flex",
               justifyContent: "center",
