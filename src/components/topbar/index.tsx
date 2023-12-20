@@ -1,8 +1,11 @@
 import Logo from "@/assets/logo.png";
 import { Box, Button, Typography } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 const Topbar = () => {
+  const { data: session } = useSession();
+
   return (
     <Box
       sx={{
@@ -14,7 +17,7 @@ const Topbar = () => {
         alignItems: "center",
       }}
     >
-      <Box sx={{ m: 2 }}>
+      <Box sx={{ m: 5 }}>
         <Image style={{ width: 100, height: 100 }} src={Logo} alt="Logo" />
       </Box>
       <Box>
@@ -22,9 +25,19 @@ const Topbar = () => {
           Foodie POS
         </Typography>
       </Box>
-      <Box sx={{ m: 2 }}>
-        <Button variant="contained">sign out</Button>
-      </Box>
+      {/* only show signout button when logged in */}
+      {session ? (
+        <Box sx={{ m: 5 }}>
+          <Button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            variant="contained"
+          >
+            sign out
+          </Button>
+        </Box>
+      ) : (
+        <span /> // flexbox trick to maintain space-between
+      )}
     </Box>
   );
 };
