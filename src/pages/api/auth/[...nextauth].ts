@@ -11,10 +11,10 @@ export const authOptions = {
     }),
   ],
   // custion google login page UI
-  pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
-  },
+  // pages: {
+  //   signIn: "/auth/signin",
+  //   signOut: "/auth/signout",
+  // },
 };
 
 export default NextAuth(authOptions);

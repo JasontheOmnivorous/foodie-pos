@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { ReactNode } from "react";
+import Topbar from "../topbar";
 
 interface Props {
   children: ReactNode;
@@ -8,7 +9,7 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <Box>
-      <Typography>Layout's here</Typography>
+      <Topbar />
       <Box>{children}</Box>
     </Box>
   );
