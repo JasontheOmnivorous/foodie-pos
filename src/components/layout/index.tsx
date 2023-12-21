@@ -31,10 +31,8 @@ const Layout = ({ children }: Props) => {
         {session ? <Sidebar /> : <span />}
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             m: 5,
+            width: "100%",
           }}
         >
           {children}
