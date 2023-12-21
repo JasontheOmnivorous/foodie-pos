@@ -86,9 +86,12 @@ const Sidebar = () => {
     >
       {sidebarData.map((item) =>
         item.name === "Settings" ? (
-          <Link style={{ textDecoration: "none" }} href={item.route}>
+          <Link
+            key={item.id}
+            style={{ textDecoration: "none" }}
+            href={item.route}
+          >
             <Box
-              key={item.id}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -104,7 +107,11 @@ const Sidebar = () => {
             </Box>
           </Link>
         ) : (
-          <Link style={{ textDecoration: "none" }} href={item.route}>
+          <Link
+            key={item.id}
+            style={{ textDecoration: "none" }}
+            href={item.route}
+          >
             <Box
               key={item.id}
               sx={{
