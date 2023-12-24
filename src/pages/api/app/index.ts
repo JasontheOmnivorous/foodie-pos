@@ -15,12 +15,79 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { email: user?.email as string },
   });
 
-  // if user doesn't exist in database, add him
+  // if user doesn't exist in database, add him and create some dummy data
   if (!userExists) {
-    const newUser = await prisma.user.create({
-      data: { name: user?.name, email: user?.email as string },
+    // 1. create company
+    // after new user's created, create example default data for the user to blend in easily
+    const newCompanyName = "Default Company";
+    const newCompanyAddress = "Default Company Address";
+    const newCompany = await prisma.company.create({
+      data: { name: newCompanyName, address: newCompanyAddress },
     });
-    return res.status(200).json(newUser);
+
+    // 2. create user
+    await prisma.user.create({
+      data: {
+        name: user?.name,
+        email: user?.email as string,
+        companyId: newCompany.id,
+      },
+    });
+
+    // 3. create menu category
+    const newMenuCategoryName = "Default Menu Category";
+    const newMenuCategory = await prisma.menuCategory.create({
+      data: { name: newMenuCategoryName, companyId: newCompany.id },
+    });
+
+    // 4. create menu
+    const newMenuName = "Carbonara";
+    const newMenu = await prisma.menu.create({
+      data: { name: newMenuName, price: 1000 },
+    });
+
+    // 5. populate MenuCategoryMenu join table
+    await prisma.menuCategoryMenu.create({
+      data: { menuCategoryId: newMenuCategory.id, menuId: newMenu.id },
+    });
+
+    // 6. create addon category
+    const newAddonCategoryName = "Default Addon Category";
+    const newAddonCategory = await prisma.addonCategory.create({
+      data: { name: newAddonCategoryName },
+    });
+
+    // 7. populate MenuAddonCategory join table
+    await prisma.menuAddonCategory.create({
+      data: { menuId: newMenu.id, addonCategoryId: newAddonCategory.id },
+    });
+
+    // 8. create addons
+    const newAddonName = "Default Addon";
+    const newAddonNameTwo = "Default Addon Two";
+    const newAddonNameThree = "Default Addon Three";
+
+    // define necessary data with an array to use with transaction
+    const newAddonData = [
+      {
+        name: newAddonName,
+        addonCategoryId: newAddonCategory.id,
+      },
+      {
+        name: newAddonNameTwo,
+        addonCategoryId: newAddonCategory.id,
+      },
+      {
+        name: newAddonNameThree,
+        addonCategoryId: newAddonCategory.id,
+      },
+    ];
+
+    // create many addons in a batch using $transaction
+    await prisma.$transaction(
+      newAddonData.map((addon) => prisma.addon.create({ data: addon }))
+    );
+  } else {
   }
 
   return res.status(200).json(user);
