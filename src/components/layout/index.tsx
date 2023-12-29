@@ -1,4 +1,5 @@
-import { config } from "@/utils/config";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { ReactNode, useEffect } from "react";
@@ -11,16 +12,19 @@ interface Props {
 
 const Layout = ({ children }: Props) => {
   const { data: session } = useSession();
+  const dispatch = useAppDispatch();
+  const initiated = useAppSelector((store) => store.app.init);
 
   // call api only when logged in
   useEffect(() => {
-    if (session) fetchData(); // if session is populated, fetch data
+    // if the user is logged in and data haven't been fetched once, fetch the data
+    if (session && !initiated) {
+      dispatch(fetchAppData({ onSuccess })); // if session is populated, fetch data
+    }
   }, [session]);
 
-  const fetchData = async () => {
-    const response = await fetch(`${config.apiBaseUrl}/app`);
-    const dataFromServer = await response.json();
-    console.log("data from server: ", dataFromServer);
+  const onSuccess = () => {
+    alert(`Welcome, ${session?.user?.name}`);
   };
 
   return (
