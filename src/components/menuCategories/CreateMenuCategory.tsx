@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/store/hooks";
+import { createMenuCategory } from "@/store/slices/menuCategorySlice";
 import {
   Button,
   Dialog,
@@ -7,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 
 interface Props {
   open: boolean;
@@ -14,6 +17,20 @@ interface Props {
 }
 
 const CreateMenuCategory = ({ open, setOpen }: Props) => {
+  const [name, setName] = useState<string>("");
+  const dispatch = useAppDispatch();
+
+  const handleCreateMenuCategory = () => {
+    dispatch(
+      createMenuCategory({
+        name,
+        // get selected locationId from localStorage to create new menuCategory
+        locationId: Number(localStorage.getItem("selectedLocationId")),
+      })
+    );
+    setOpen(false);
+  };
+
   return (
     <Dialog onClose={() => setOpen(false)} open={open}>
       <DialogTitle>
@@ -22,10 +39,25 @@ const CreateMenuCategory = ({ open, setOpen }: Props) => {
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <TextField sx={{ mt: 2 }} label="Name" variant="outlined" autoFocus />
+        <TextField
+          onChange={(evt) => setName(evt.target.value)}
+          sx={{ mt: 2, width: "300px" }}
+          label="Name"
+          variant="outlined"
+          autoFocus
+        />
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained">create</Button>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-around" }}>
+        <Button onClick={() => setOpen(false)} variant="contained">
+          cancel
+        </Button>
+        <Button
+          onClick={handleCreateMenuCategory}
+          disabled={!name}
+          variant="contained"
+        >
+          create
+        </Button>
       </DialogActions>
     </Dialog>
   );

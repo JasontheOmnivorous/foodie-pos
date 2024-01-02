@@ -7,4 +7,7 @@ export interface MenuCategorySlice {
   error: Error | null;
 }
 
-export interface GetMenuCategoryOptions extends BaseOptions {}
+export interface CreateMenuCategoryOptions extends BaseOptions {
+  name: string;
+  locationId: number;
+}
