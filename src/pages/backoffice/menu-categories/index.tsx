@@ -20,7 +20,11 @@ const MenuCategoriesPage = () => {
             <Typography key={item.id}>{item.name}</Typography>
           ))}
         </Box>
-        <Button onClick={() => setOpen(true)} variant="contained">
+        <Button
+          sx={{ height: 50 }}
+          onClick={() => setOpen(true)}
+          variant="contained"
+        >
           add new menu category
         </Button>
         <CreateMenuCategory open={open} setOpen={setOpen} />

@@ -20,15 +20,19 @@ const CreateMenuCategory = ({ open, setOpen }: Props) => {
   const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
 
+  const onSuccess = () => {
+    setOpen(false);
+  };
+
   const handleCreateMenuCategory = () => {
     dispatch(
       createMenuCategory({
         name,
         // get selected locationId from localStorage to create new menuCategory
         locationId: Number(localStorage.getItem("selectedLocationId")),
+        onSuccess,
       })
     );
-    setOpen(false);
   };
 
   return (
