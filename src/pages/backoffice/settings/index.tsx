@@ -11,11 +11,14 @@ import { useState } from "react";
 
 const SettingsPage = () => {
   const locations = useAppSelector((store) => store.location.items);
-  const [locationId, setLocationId] = useState<number>();
+  const [locationId, setLocationId] = useState<number>(
+    locations.length > 0 ? locations[0].id : 1
+  );
 
   const handleLocationChange = (event: SelectChangeEvent<number>) => {
     // store selected locationId in localStorage to control the whole app's data state based on location
     localStorage.setItem("selectedLocationId", String(event.target.value));
+    setLocationId(Number(event.target.value));
   };
 
   return (
