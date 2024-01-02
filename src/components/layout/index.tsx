@@ -23,9 +23,7 @@ const Layout = ({ children }: Props) => {
     }
   }, [session]);
 
-  const onSuccess = () => {
-    alert(`Welcome, ${session?.user?.name}`);
-  };
+  const onSuccess = () => {};
 
   return (
     <Box>

@@ -98,8 +98,15 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
+    // 10. create tables
+    const newTableName = "Default Table";
+    const newTable = await prisma.table.create({
+      data: { name: newTableName, locationId: newLocation.id },
+    });
+
     res.status(200).json({
       newLocation,
+      newTable,
       newMenuCategory,
       newMenu,
       newMenuCategoryMenu,
@@ -116,6 +123,7 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const locations = await prisma.location.findMany({
       where: { companyId: company?.id },
     });
+    const locationIds = locations.map((item) => item.id);
 
     const menuCategories = await prisma.menuCategory.findMany({
       where: { companyId: company?.id },
@@ -152,7 +160,12 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { id: { in: addonCategoryIds } },
     });
 
+    const tables = await prisma.table.findMany({
+      where: { locationId: { in: locationIds } },
+    });
+
     return res.status(200).json({
+      tables,
       locations,
       menuCategories,
       menus,

@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  TextField,
   Typography,
 } from "@mui/material";
 
@@ -21,7 +22,7 @@ const CreateMenuCategory = ({ open, setOpen }: Props) => {
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <h1>form here...</h1>
+        <TextField sx={{ mt: 2 }} label="Name" variant="outlined" autoFocus />
       </DialogContent>
       <DialogActions>
         <Button variant="contained">create</Button>
