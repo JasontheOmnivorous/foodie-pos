@@ -1,6 +1,8 @@
+import ItemCard from "@/components/item/ItemCard";
 import CreateLocation from "@/components/locations/CreateLocation";
 import { useAppSelector } from "@/store/hooks";
-import { Box, Button, Typography } from "@mui/material";
+import { LocationCity } from "@mui/icons-material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const TablesPage = () => {
@@ -17,10 +19,19 @@ const TablesPage = () => {
       >
         <Box>
           {locations.map((item) => (
-            <Typography key={item.id}>{item.name}</Typography>
+            <ItemCard
+              key={item.id}
+              icon={<LocationCity sx={{ fontSize: 50 }} />}
+              href="/"
+              title={item.name}
+            />
           ))}
         </Box>
-        <Button onClick={() => setOpen(true)} variant="contained">
+        <Button
+          sx={{ width: 250, height: 60 }}
+          onClick={() => setOpen(true)}
+          variant="contained"
+        >
           add new location
         </Button>
         <CreateLocation open={open} setOpen={setOpen} />

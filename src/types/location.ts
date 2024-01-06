@@ -7,4 +7,12 @@ export interface LocationSlice {
   error: Error | null;
 }
 
-export interface GetLocationOptions extends BaseOptions {}
+export interface CreateLocationOptions extends BaseOptions {
+  name: string;
+  address: string;
+}
+
+export interface LocationPayload {
+  name: string;
+  address: string;
+}

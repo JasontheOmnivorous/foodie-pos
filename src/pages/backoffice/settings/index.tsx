@@ -11,8 +11,12 @@ import { useState } from "react";
 
 const SettingsPage = () => {
   const locations = useAppSelector((store) => store.location.items);
+  const firstLocationId = locations[0].id as number;
+  // if locationId hasnt been selected initially, set it's value to the id of first element of locations array
   const [locationId, setLocationId] = useState<number>(
-    locations.length > 0 ? locations[0].id : 1
+    localStorage.getItem("selectedLocationId")
+      ? Number(localStorage.getItem("selectedLocationId"))
+      : firstLocationId
   );
 
   const handleLocationChange = (event: SelectChangeEvent<number>) => {
@@ -20,6 +24,8 @@ const SettingsPage = () => {
     localStorage.setItem("selectedLocationId", String(event.target.value));
     setLocationId(Number(event.target.value));
   };
+
+  if (!locations) return null;
 
   return (
     <Box sx={{ m: 2 }}>
