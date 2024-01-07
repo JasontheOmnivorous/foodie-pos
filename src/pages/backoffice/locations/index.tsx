@@ -15,9 +15,17 @@ const TablesPage = () => {
         sx={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "flex-start",
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
           {locations.map((item) => (
             <ItemCard
               key={item.id}
