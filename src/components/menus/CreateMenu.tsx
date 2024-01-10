@@ -1,4 +1,5 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createMenu } from "@/store/slices/menuSlice";
 import { CreateMenuOptions } from "@/types/menu";
 import {
   Button,
@@ -31,6 +32,7 @@ const CreateMenu = ({ open, setOpen }: Props) => {
     menuCategoryIds: [],
   });
   const menuCategories = useAppSelector((store) => store.menuCategory.items);
+  const dispatch = useAppDispatch();
 
   const handleChange = (event: SelectChangeEvent<number[]>) => {
     const selectedIds = event.target.value as number[];
@@ -38,8 +40,13 @@ const CreateMenu = ({ open, setOpen }: Props) => {
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
 
+  const onSuccess = () => {
+    setOpen(false);
+  };
+
   const handleCreateMenu = () => {
-    console.log(newMenu);
+    const { name, price, menuCategoryIds } = newMenu;
+    dispatch(createMenu({ name, price, menuCategoryIds, onSuccess }));
   };
 
   return (
