@@ -133,11 +133,11 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // in operator used for extracting multiple results of a query
     // menuCategory id 1 may have many menu ids
-    const menuCategoryMenu = await prisma.menuCategoryMenu.findMany({
+    const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: { in: menuCategoryIds } },
     });
 
-    const menuIds = menuCategoryMenu.map((item) => item.menuId);
+    const menuIds = menuCategoryMenus.map((item) => item.menuId);
 
     // find menus using menuIds
     const menus = await prisma.menu.findMany({
@@ -169,6 +169,7 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       locations,
       menuCategories,
       menus,
+      menuCategoryMenus,
       addonCategories,
       addons,
     });

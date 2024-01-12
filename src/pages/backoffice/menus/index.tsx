@@ -28,6 +28,7 @@ const MenusPage = () => {
         >
           {menus.map((item) => (
             <ItemCard
+              href={`/backoffice/menus/${item.id}`}
               key={item.id}
               icon={<RestaurantMenuSharp sx={{ fontSize: 50 }} />}
               title={item.name}
