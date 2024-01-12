@@ -151,6 +151,7 @@ model Orderline {
   addon         Addon    @relation(fields: [addonId], references: [id])
   addonId       Int
   quantity      Int
+  // orderSequence is a random string generated to identify the same menu order with many addons
   orderSequence String
   isArchived    Boolean  @default(false)
   updatedAt     DateTime @updatedAt
