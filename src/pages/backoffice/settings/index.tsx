@@ -33,7 +33,7 @@ const SettingsPage = () => {
         <InputLabel>Select Location</InputLabel>
         <Select
           value={locationId}
-          label="Location"
+          label="Select Location"
           onChange={handleLocationChange}
         >
           {locations.map((item) => (
