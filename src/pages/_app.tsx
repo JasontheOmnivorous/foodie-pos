@@ -5,6 +5,7 @@ import { theme } from "@/utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
+import NextNProgress from 'nextjs-progressbar';
 import { Provider } from "react-redux";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Layout>
+            <NextNProgress color="pink" />
             <Component {...pageProps} />
           </Layout>
         </ThemeProvider>
