@@ -36,7 +36,6 @@ const CreateMenu = ({ open, setOpen }: Props) => {
 
   const handleChange = (event: SelectChangeEvent<number[]>) => {
     const selectedIds = event.target.value as number[];
-    console.log("selectedIds: ", selectedIds);
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
 

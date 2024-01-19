@@ -1,19 +1,23 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { deleteMenu, updateMenu } from "@/store/slices/menuSlice";
+import { UpdateMenuOptions } from "@/types/menu";
+import DeleteWarningBox from "@/utils/DeleteWarningBox";
 import {
   Box,
+  Button,
   Checkbox,
   FormControl,
   InputLabel,
   ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UpdateMenu = () => {
-  const [updateMenu, setUpdateMenu] = useState();
   const router = useRouter();
   const menus = useAppSelector((store) => store.menu.items);
   const selectedMenu = menus.find(
@@ -30,7 +34,36 @@ const UpdateMenu = () => {
   );
   const menuCategories = useAppSelector((store) => store.menuCategory.items);
 
-  const handleOnChange = () => {};
+  const [updateMenuData, setUpdateMenuData] = useState<UpdateMenuOptions>({
+    id: Number(router.query.id),
+    name: selectedMenu?.name,
+    price: selectedMenu?.price,
+    menuCategoryIds: [],
+  });
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (relatedMenuCategoryIds)
+      setUpdateMenuData({
+        ...updateMenuData,
+        menuCategoryIds: relatedMenuCategoryIds,
+      });
+  }, [menuCategoryMenus]);
+
+  const handleOnChange = (event: SelectChangeEvent<number[]>) => {
+    const selectedIds = event.target.value as number[];
+    setUpdateMenuData({ ...updateMenuData, menuCategoryIds: selectedIds });
+  };
+
+  const handleUpdateMenu = () => {
+    dispatch(updateMenu(updateMenuData));
+  };
+
+  const handleDeleteMenu = () => {
+    const id = Number(router.query.id);
+    dispatch(deleteMenu({ id }));
+  };
 
   if (!selectedMenu) return null;
 
@@ -43,15 +76,30 @@ const UpdateMenu = () => {
         alignItems: "center",
       }}
     >
-      <TextField sx={{ m: 2, width: 300 }} defaultValue={selectedMenu.name} />
-      <TextField sx={{ m: 2, width: 300 }} defaultValue={selectedMenu.price} />
+      <TextField
+        onChange={(evt) =>
+          setUpdateMenuData({ ...updateMenuData, name: evt.target.value })
+        }
+        sx={{ m: 2, width: 300 }}
+        defaultValue={selectedMenu.name}
+      />
+      <TextField
+        onChange={(evt) =>
+          setUpdateMenuData({
+            ...updateMenuData,
+            price: Number(evt.target.value),
+          })
+        }
+        sx={{ m: 2, width: 300 }}
+        defaultValue={selectedMenu.price}
+      />
       <FormControl sx={{ m: 2, width: 300 }}>
         <InputLabel>Choose Menu Category</InputLabel>
         <Select
           sx={{ m: 1, width: 300 }}
           multiple
-          label="choose menu category"
-          value={relatedMenuCategoryIds}
+          label="Choose Menu Category"
+          value={updateMenuData.menuCategoryIds}
           onChange={handleOnChange}
           // selected menu category ids will be put internally inside this arg to render as default text of select
           renderValue={(selectedIds) => {
@@ -75,14 +123,43 @@ const UpdateMenu = () => {
           }}
         >
           {menuCategories.map((item) => (
-            <MenuItem key={item.id}>
+            <MenuItem value={item.id} key={item.id}>
               {/* if current id of all menuCategories exists inside related menuCategoryIds, checked = true */}
-              <Checkbox checked={relatedMenuCategoryIds.includes(item.id)} />
+              <Checkbox
+                checked={updateMenuData.menuCategoryIds.includes(item.id)}
+              />
               <ListItemText primary={item.name} />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
+      {/* button section */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Button sx={{ m: 2 }} onClick={handleUpdateMenu} variant="contained">
+          update
+        </Button>
+        <Button
+          onClick={() => setOpen(true)}
+          sx={{ m: 2 }}
+          color="error"
+          variant="outlined"
+        >
+          delete
+        </Button>
+      </Box>
+      {/* warning dialog */}
+      <DeleteWarningBox
+        handleDelete={handleDeleteMenu}
+        open={open}
+        setOpen={setOpen}
+        deleteItemType="menu"
+      />
     </Box>
   );
 };
