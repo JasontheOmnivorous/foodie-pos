@@ -141,7 +141,7 @@ const getHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // find menus using menuIds
     const menus = await prisma.menu.findMany({
-      where: { id: { in: menuIds } },
+      where: { id: { in: menuIds }, isArchived: false },
     });
 
     const menuAddonCategory = await prisma.menuAddonCategory.findMany({
